@@ -1,0 +1,4 @@
+﻿  Source.c
+C:\Users\vhane\source\repos\Project1\Source.c(56): warning C4013: 'gets' undefined; assuming extern returning int
+C:\Users\vhane\source\repos\Project1\Source.c(195): warning C4716: 'sacarNbits': must return a value
+  Project1.vcxproj -> C:\Users\vhane\source\repos\Project1\Debug\Project1.exe

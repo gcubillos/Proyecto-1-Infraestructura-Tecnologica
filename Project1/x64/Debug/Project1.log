@@ -1,0 +1,7 @@
+﻿  Source.c
+C:\Users\vhane\source\repos\Project1\Source.c(56): warning C4013: 'gets' undefined; assuming extern returning int
+C:\Users\vhane\source\repos\Project1\Source.c(66): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'size_t'
+  C:\Users\vhane\source\repos\Project1\Source.c(66): note: consider using '%zd' in the format string
+C:\Users\vhane\source\repos\Project1\Source.c(125): warning C4098: 'insertarMensaje': 'void' function returning a value
+C:\Users\vhane\source\repos\Project1\Source.c(207): warning C4716: 'sacarNbits': must return a value
+  Project1.vcxproj -> C:\Users\vhane\source\repos\Project1\x64\Debug\Project1.exe
