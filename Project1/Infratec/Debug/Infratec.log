@@ -1,0 +1,19 @@
+﻿  Source.c
+C:\Users\lvasq\Documents\Source.c(56): warning C4013: 'gets' undefined; assuming extern returning int
+C:\Users\lvasq\Documents\Source.c(124): warning C4098: 'insertarMensaje': 'void' function returning a value
+C:\Users\lvasq\Documents\Source.c(159): warning C4018: '<': signed/unsigned mismatch
+C:\Users\lvasq\Documents\Source.c(162): warning C4552: '>>': result of expression not used
+C:\Users\lvasq\Documents\Source.c(163): warning C4552: '<<': result of expression not used
+C:\Users\lvasq\Documents\Source.c(202): warning C4554: '<<': check operator precedence for possible error; use parentheses to clarify precedence
+C:\Users\lvasq\Documents\Source.c(202): warning C4552: '<<': result of expression not used
+C:\Users\lvasq\Documents\Source.c(205): warning C4022: 'memcpy': pointer mismatch for actual parameter 1
+C:\Users\lvasq\Documents\Source.c(205): warning C4022: 'memcpy': pointer mismatch for actual parameter 2
+C:\Users\lvasq\Documents\Source.c(205): warning C4047: 'function': 'const char *' differs in levels of indirection from 'unsigned char'
+C:\Users\lvasq\Documents\Source.c(205): warning C4024: 'strlen': different types for formal and actual parameter 1
+C:\Users\lvasq\Documents\Source.c(226): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\lvasq\Documents\Source.c(255): warning C4552: '<<': result of expression not used
+C:\Users\lvasq\Documents\Source.c(261): warning C4552: '>>': result of expression not used
+C:\Users\lvasq\Documents\Source.c(268): warning C4552: '>>': result of expression not used
+C:\Users\lvasq\Documents\Source.c(278): warning C4552: '<<': result of expression not used
+C:\Users\lvasq\Documents\Source.c(282): warning C4552: '>>': result of expression not used
+  Infratec.vcxproj -> C:\Users\lvasq\source\repos\Infratec\Debug\Infratec.exe
