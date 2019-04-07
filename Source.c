@@ -32,8 +32,8 @@ void insertarMensaje(Imagen * img, unsigned char mensaje[], int n);
 //Funci�n que lee un mensaje de una imagen dando la longitud del mensaje y el numero de bits por byte usados
 void leerMensaje(Imagen * img, unsigned char msg[], int l, int n);
 
-//Funci�n que saca n bits de una secuencia de caracteres a partir de una posici�n dada
-unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n);
+//Función que saca n bits de una secuencia de caracteres a partir de una posición dada
+unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char doneP[]);
 
 // Programa principal
 // NO MODIFICAR
@@ -121,11 +121,10 @@ void insertarMensaje(Imagen* img, unsigned char mensaje[], int n) {
 	// ------------------------------------------------------------------------------
 	// Insert the message to the image information
 	// ------------------------------------------------------------------------------
-	if (strlen(mensaje) == 0)
-		printf("Ingrese un mensaje válido"); /* no input string */
+	if (mensaje == NULL) return 0; /* no input string */
 	int number_bits = 0;
 	size_t len = strlen(mensaje);
-	char *binary = malloc(len*8 + 1 );	// each char is one byte (8 bits) and + 1 at the end for null terminator
+	char* binary = malloc(len * 8 + 1);	// each char is one byte (8 bits) and + 1 at the end for null terminator
 	binary[0] = '\0';
 	for (size_t i = 0; i < len; ++i)
 	{
@@ -144,7 +143,7 @@ void insertarMensaje(Imagen* img, unsigned char mensaje[], int n) {
 		}
 	}
 	int bmpHeight, bmpWidth;
-
+	number_bits = strlen(binary);
 	bmpHeight = img->alto;
 	bmpWidth = img->ancho;
 
@@ -155,38 +154,62 @@ void insertarMensaje(Imagen* img, unsigned char mensaje[], int n) {
 	char done = 1; // Se termina de escribir
 	char* doneP = &done; // Pointer to the position where the done variable is
 
-	
+
 		// First we're gonna go through the image information
-		for (int i = 0; i < ilen && done; i++)
-		{
-			// Make cero the n less significant bits of the byte i of the image information
-			info[i] >> n;
-			info[i] << n;
+	for (int i = 0; i < ilen && done; i++)
+	{
+		unsigned char a = info[i];
+		// Make cero the n less significant bits of the byte i of the image information
+		a = a >> n;
+		a = a << n;
 
-			// Char with the n bits that we're gonna insert. The n bits are the less significant bits of the char
-			unsigned char bitsToInsert = sacarNbits(binary, i * n, n);
+		// Char with the n bits that we're gonna insert. The n bits are the less significant bits of the char
+		unsigned char bitsToInsert = sacarNbits(binary, i * n, n, doneP);
 
-			// Insert the n bits to the char with the image info
-			info[i] = info[i] | bitsToInsert;
-		}
+		// Insert the n bits to the char with the image info
+		info[i] = a | bitsToInsert;
+		unsigned char finalByte = info[i];
+	}
 
-	
+
 
 	img->informacion = info;
 	// ------------------------------------------------------------------------------
 	// End
 	// ------------------------------------------------------------------------------
+
+
 }
 
 /**
 * Extrae un mensaje de tamanio l, guardado de a n bits por componente de color, de la imagen apuntada por img
-* par�metro img: Apuntador a una imagen que tiene almacenado el mensaje en sus pixeles.
-* par�metro msg: Apuntador a una cadena de caracteres donde se depositar� el mensaje.
-* par�metro l: Tamanio en bytes del mensaje almacenado en la imagen.
-* par�metro n: Cantidad de bits del mensaje que se almacenan en cada componente de color de cada pixel. 0 < n <= 8.
+* parámetro img: Apuntador a una imagen que tiene almacenado el mensaje en sus pixeles.
+* parámetro msg: Apuntador a una cadena de caracteres donde se depositará el mensaje.
+* parámetro l: Tamanio en bytes del mensaje almacenado en la imagen.
+* parámetro n: Cantidad de bits del mensaje que se almacenan en cada componente de color de cada pixel. 0 < n <= 8.
 */
-void leerMensaje(Imagen * img, unsigned char msg[], int l, int n) {
+void leerMensaje(Imagen* img, unsigned char msg[], int l, int n) {
 	// TODO: Desarrollar OBLIGATORIAMENTE en su totalidad.
+
+	unsigned char* info = img->informacion;
+
+	int mlen = (l*8)/n; // Number of bytes in which the message is hidden
+	int posMsg = 0; // Position in which the message should be concatenated
+
+
+		// First we're gonna go through the image information
+	for (int i = 0; i < mlen; i++)
+	{
+		// Make cero the 8-n more significant bits of the byte i of the image information
+		info[i] << 8 - n;
+		info[i] >> 8 - n;
+
+		// copy the char into the desired position of another char
+		memcpy(msg[posMsg], info[i], strlen(info[i]) + 1);
+
+		// Insert the n bits to the char with the image info
+		posMsg = posMsg + n;
+	}
 }
 
 /**
@@ -198,15 +221,15 @@ void leerMensaje(Imagen * img, unsigned char msg[], int l, int n) {
 * parámetro doneP: Apuntador a el lugar donde se encuentra la variable que indica que se ha termiado el proceso
 * retorno: Los n bits solicitados almacenados en los bits menos significativos de un unsigned char
 */
-unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n) 
+unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char doneP[]) 
 {
 	size_t len = strlen(secuencia);
-	
+	unsigned char* info = secuencia;
 	// Know when to stop
-	/* if (bitpos >= len || (bitpos + n) >= len)
+	if (bitpos >= len || (bitpos + n) >= len)
 	{
 		*doneP = 0;
-	} */
+	}
 
 	// Byte where starts the n bits sequence
 	int posByte = bitpos / 8;
@@ -217,13 +240,13 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n)
 	// Char with the n bits of the message in the less significant bits
 	unsigned char number = 0;
 
-	secuencia[posByte];
-	unsigned char data = secuencia[posByte];
+	unsigned char data = info[posByte];
+	unsigned char* dataP = &data;
 
 	// If n is 8
 	if (n == 8)
 	{
-		data = number;
+
 	}
 
 	// If the n bits are in two bytes of the message
@@ -232,20 +255,20 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n)
 		int numberBitsByteOne = 8 - posBit;
 		int numberBitsByteTwo = n - numberBitsByteOne;
 		// Byte one
-		data << posBit;		// Now, data has a fraction of the n bits in the more significant bits 
+		data = data << posBit;		// Now, data has a fraction of the n bits in the more significant bits 
 		int aux = numberBitsByteOne;
 
 		// Put the info of the byte one in the correct position 
 		while (aux != numberBitsByteTwo)
 		{
-			data >> 1;
+			data = data >> 1;
 			aux++;
 		}	// Now the info of the byte one is correctly inside the data char		
-			
+
 		// Byte two
 		char aa = secuencia[posByte + 1];
 		char data2 = aa;
-		data2 >> (8 - numberBitsByteTwo);	// Now, data2 has a fraction of the n bits in the less significant bits 
+		data2 = data2 >> (8 - numberBitsByteTwo);	// Now, data2 has a fraction of the n bits in the less significant bits 
 
 		// Concatenate data with data2
 		data = data | data2;
@@ -255,11 +278,11 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n)
 	else
 	{
 		int aux = posBit;
-		data << posBit;
+		data = data << posBit;
 		aux = 8 - n;
 		while (aux != 0)
 		{
-			data >> 1;
+			data = data >> 1;
 			aux--;
 		}
 	}
