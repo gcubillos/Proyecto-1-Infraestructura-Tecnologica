@@ -2,7 +2,7 @@
 // EL GRUPO DEBE SER DESARROLLADO EN GRUPOS DE A 3 PERSONAS MAXIMO
 //
 // DESARROLLADO POR:
-// Gabriel Cubillos Bolivar - 201729365
+// Gabriel Cubillos Bolivar - 201729365 g.cubillosb
 // Nombre - C�digo
 // Nombre - C�digo
 
@@ -109,6 +109,7 @@ int main(int argc, char* argv[]) {
 	system("pause");
 	return 0;
 }
+
 /**
 * Inserta un mensaje, de a n bits por componente de color, en la imagen apuntada por img
 * parámetro img: Apuntador a una imagen en cuyos pixeles se almacenará el mensaje.
@@ -120,7 +121,8 @@ void insertarMensaje(Imagen* img, unsigned char mensaje[], int n) {
 	// ------------------------------------------------------------------------------
 	// Insert the message to the image information
 	// ------------------------------------------------------------------------------
-	if (mensaje == NULL) printf 0; /* no input string */
+	if (strlen(mensaje) == 0)
+		printf("Ingrese un mensaje válido"); /* no input string */
 	int number_bits = 0;
 	size_t len = strlen(mensaje);
 	char *binary = malloc(len*8 + 1 );	// each char is one byte (8 bits) and + 1 at the end for null terminator
@@ -162,7 +164,7 @@ void insertarMensaje(Imagen* img, unsigned char mensaje[], int n) {
 			info[i] << n;
 
 			// Char with the n bits that we're gonna insert. The n bits are the less significant bits of the char
-			unsigned char bitsToInsert = sacarNbits(binary, i * n, n, doneP);
+			unsigned char bitsToInsert = sacarNbits(binary, i * n, n);
 
 			// Insert the n bits to the char with the image info
 			info[i] = info[i] | bitsToInsert;
@@ -174,8 +176,17 @@ void insertarMensaje(Imagen* img, unsigned char mensaje[], int n) {
 	// ------------------------------------------------------------------------------
 	// End
 	// ------------------------------------------------------------------------------
+}
 
-
+/**
+* Extrae un mensaje de tamanio l, guardado de a n bits por componente de color, de la imagen apuntada por img
+* par�metro img: Apuntador a una imagen que tiene almacenado el mensaje en sus pixeles.
+* par�metro msg: Apuntador a una cadena de caracteres donde se depositar� el mensaje.
+* par�metro l: Tamanio en bytes del mensaje almacenado en la imagen.
+* par�metro n: Cantidad de bits del mensaje que se almacenan en cada componente de color de cada pixel. 0 < n <= 8.
+*/
+void leerMensaje(Imagen * img, unsigned char msg[], int l, int n) {
+	// TODO: Desarrollar OBLIGATORIAMENTE en su totalidad.
 }
 
 /**
@@ -187,15 +198,15 @@ void insertarMensaje(Imagen* img, unsigned char mensaje[], int n) {
 * parámetro doneP: Apuntador a el lugar donde se encuentra la variable que indica que se ha termiado el proceso
 * retorno: Los n bits solicitados almacenados en los bits menos significativos de un unsigned char
 */
-unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char doneP[]) 
+unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n) 
 {
 	size_t len = strlen(secuencia);
 	
 	// Know when to stop
-	if (bitpos >= len || (bitpos + n) >= len)
+	/* if (bitpos >= len || (bitpos + n) >= len)
 	{
 		*doneP = 0;
-	}
+	} */
 
 	// Byte where starts the n bits sequence
 	int posByte = bitpos / 8;
@@ -254,39 +265,6 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 	}
 
 	return data;
-}
-
-/**
-* Inserta un mensaje, de a n bits por componente de color, en la imagen apuntada por img
-* par�metro img: Apuntador a una imagen en cuyos pixeles se almacenar� el mensaje.
-* par�metro mensaje: Apuntador a una cadena de caracteres con el mensaje.
-* par�metro n: Cantidad de bits del mensaje que se almacenar�n en cada componente de color de cada pixel. 0 < n <= 8.
-*/
-void insertarMensaje(Imagen * img, unsigned char mensaje[], int n) {
-	// TODO: Desarrollar OBLIGATORIAMENTE en su totalidad.
-}
-
-/**
-* Extrae un mensaje de tamanio l, guardado de a n bits por componente de color, de la imagen apuntada por img
-* par�metro img: Apuntador a una imagen que tiene almacenado el mensaje en sus pixeles.
-* par�metro msg: Apuntador a una cadena de caracteres donde se depositar� el mensaje.
-* par�metro l: Tamanio en bytes del mensaje almacenado en la imagen.
-* par�metro n: Cantidad de bits del mensaje que se almacenan en cada componente de color de cada pixel. 0 < n <= 8.
-*/
-void leerMensaje(Imagen * img, unsigned char msg[], int l, int n) {
-	// TODO: Desarrollar OBLIGATORIAMENTE en su totalidad.
-}
-
-/**
-* Extrae n bits a partir del bit que se encuentra en la posici�n bitpos en la secuencia de bytes que
-* se pasan como par�metro
-* par�metro secuencia: Apuntador a una secuencia de bytes.
-* par�metro n: Cantidad de bits que se desea extraer. 0 < n <= 8.
-* par�metro bitpos: Posici�n del bit desde donde se extraer�n los bits. 0 <= n < 8*longitud de la secuencia
-* retorno: Los n bits solicitados almacenados en los bits menos significativos de un unsigned char
-*/
-unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n) {
-	// DESARROLLO OPCIONAL: Puede ser �til para el desarrollo de los procedimientos obligatorios.
 }
 
 // Lee un archivo en formato BMP y lo almacena en la estructura img
