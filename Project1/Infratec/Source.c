@@ -4,7 +4,7 @@
 // DESARROLLADO POR:
 // Nombre - Código
 // Nombre - Código
-// Nombre - Código
+// Vhanessa Cardona - 201728751
 
 #define _CRT_SECURE_NO_DEPRECATE 
 #include <stdlib.h> 
@@ -19,7 +19,6 @@ typedef struct img
 	unsigned char* informacion;
 } Imagen;
 
-
 // Función que carga el bmp en la estructura Imagen
 void cargarBMP24(Imagen* imagen, char* nomArchivoEntrada);
 
@@ -27,7 +26,7 @@ void cargarBMP24(Imagen* imagen, char* nomArchivoEntrada);
 void guardarBMP24(Imagen* imagen, char* nomArchivoSalida);
 
 //Función que inserta un mensaje en la imagen usando n bits por Byte
-void insertarMensaje(Imagen* img, unsigned char mensaje[], int n);
+void insertarMensaje(Imagen* img, char mensaje[], int n);
 
 //Función que lee un mensaje de una imagen dando la longitud del mensaje y el numero de bits por byte usados
 void leerMensaje(Imagen* img, unsigned char msg[], int l, int n);
@@ -268,7 +267,7 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 
 // Lee un archivo en formato BMP y lo almacena en la estructura img
 // NO MODIFICAR
-void cargarBMP24(Imagen* imagen, char* nomArchivoEntrada) {
+void cargarBMP24(Imagen * imagen, char* nomArchivoEntrada) {
 	// bmpDataOffset almacena la posición inicial de los datos de la imagen. Las otras almacenan el alto y el ancho
 	// en pixeles respectivamente
 	int bmpDataOffset, bmpHeight, bmpWidth;
@@ -278,6 +277,7 @@ void cargarBMP24(Imagen* imagen, char* nomArchivoEntrada) {
 
 	FILE* bitmapFile;
 	bitmapFile = fopen(nomArchivoEntrada, "rb");
+
 	if (bitmapFile == NULL) {
 		printf("No ha sido posible cargar el archivo: %s\n", nomArchivoEntrada);
 		exit(-1);
@@ -300,7 +300,6 @@ void cargarBMP24(Imagen* imagen, char* nomArchivoEntrada) {
 	imagen->informacion = (unsigned char*)calloc(bmpWidth * bmpHeight, sizeof(unsigned char));
 
 	fseek(bitmapFile, bmpDataOffset, SEEK_SET); // Se ubica el puntero del archivo al comienzo de los datos
-
 	for (y = 0; y < bmpHeight; y++) {
 		for (x = 0; x < bmpWidth; x++) {
 			int pos = y * bmpWidth + x;
@@ -310,8 +309,11 @@ void cargarBMP24(Imagen* imagen, char* nomArchivoEntrada) {
 		}
 		fseek(bitmapFile, residuo, SEEK_CUR); // Se omite el residuo en los datos
 	}
+
 	fclose(bitmapFile);
 }
+
+
 
 // Esta función se encarga de guardar una estructura de Imagen con formato de 24 bits (formato destino) en un archivo binario
 // con formato BMP de Windows.
@@ -325,7 +327,6 @@ void guardarBMP24(Imagen * imagen, char* nomArchivoSalida) {
 	int relleno = 0;
 
 	int residuo = (4 - (imagen->ancho) % 4) & 3; // Se debe calcular los bits residuales del bmp, que quedan al forzar en palabras de 32 bits
-
 
 	bfType[2];       // Tipo de Bitmap
 	bfType[0] = 'B';
