@@ -2,9 +2,9 @@
 // EL GRUPO DEBE SER DESARROLLADO EN GRUPOS DE A 3 PERSONAS MAXIMO
 //
 // DESARROLLADO POR:
-// Nombre - Código
-// Nombre - Código
-// Nombre - Código
+// Nombre - CÃ³digo
+// Nombre - CÃ³digo
+// Nombre - CÃ³digo
 
 #define _CRT_SECURE_NO_DEPRECATE 
 #include <stdlib.h> 
@@ -20,19 +20,19 @@ typedef struct img
 } Imagen;
 
 
-// Función que carga el bmp en la estructura Imagen
+// FunciÃ³n que carga el bmp en la estructura Imagen
 void cargarBMP24(Imagen* imagen, char* nomArchivoEntrada);
 
-// Función que guarda el contenido de la estructura imagen en un archivo binario
+// FunciÃ³n que guarda el contenido de la estructura imagen en un archivo binario
 void guardarBMP24(Imagen* imagen, char* nomArchivoSalida);
 
-//Función que inserta un mensaje en la imagen usando n bits por Byte
+//FunciÃ³n que inserta un mensaje en la imagen usando n bits por Byte
 void insertarMensaje(Imagen* img, unsigned char mensaje[], int n);
 
-//Función que lee un mensaje de una imagen dando la longitud del mensaje y el numero de bits por byte usados
+//FunciÃ³n que lee un mensaje de una imagen dando la longitud del mensaje y el numero de bits por byte usados
 void leerMensaje(Imagen* img, unsigned char msg[], int l, int n);
 
-//Función que saca n bits de una secuencia de caracteres a partir de una posición dada
+//FunciÃ³n que saca n bits de una secuencia de caracteres a partir de una posiciÃ³n dada
 unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char doneP[]);
 
 // Programa principal
@@ -112,50 +112,35 @@ int main(int argc, char* argv[]) {
 
 /**
 * Inserta un mensaje, de a n bits por componente de color, en la imagen apuntada por img
-* parámetro img: Apuntador a una imagen en cuyos pixeles se almacenará el mensaje.
-* parámetro mensaje: Apuntador a una cadena de caracteres con el mensaje.
-* parámetro n: Cantidad de bits del mensaje que se almacenarán en cada componente de color de cada pixel. 0 < n <= 8.
+* parÃ¡metro img: Apuntador a una imagen en cuyos pixeles se almacenarÃ¡ el mensaje.
+* parÃ¡metro mensaje: Apuntador a una cadena de caracteres con el mensaje.
+* parÃ¡metro n: Cantidad de bits del mensaje que se almacenarÃ¡n en cada componente de color de cada pixel. 0 < n <= 8.
 */
-void insertarMensaje(Imagen* img, unsigned char mensaje[], int n) {
+void insertarMensaje(Imagen* img, char mensaje[], int n) {
 
 	// ------------------------------------------------------------------------------
 	// Insert the message to the image information
 	// ------------------------------------------------------------------------------
-	if (mensaje == NULL) return 0; /* no input string */
+	if (strlen(mensaje) == 0)
+		return 0; /* no input string */
+
 	int number_bits = 0;
 	size_t len = strlen(mensaje);
-	char* binary = malloc(len * 8 + 1);	// each char is one byte (8 bits) and + 1 at the end for null terminator
-	binary[0] = '\0';
-	for (size_t i = 0; i < len; ++i)
-	{
-		char ch = mensaje[i];
-		for (int j = 7; j >= 0; --j)
-		{
-			number_bits++;
-			if (ch & (1 << j))
-			{
-				strcat(binary, "1");
-			}
-			else
-			{
-				strcat(binary, "0");
-			}
-		}
-	}
+
+	char* binary = mensaje;
 	int bmpHeight, bmpWidth;
-	number_bits = strlen(binary);
+
 	bmpHeight = img->alto;
 	bmpWidth = img->ancho;
 
 	unsigned char* info = img->informacion;
 
-	size_t ilen = strlen(img->informacion); // Numero de bits imagen
+	int ilen = bmpHeight * bmpWidth; // Numero de bits imagen
 	int posMsg = 0; // Posicion en el mensaje
 	char done = 1; // Se termina de escribir
 	char* doneP = &done; // Pointer to the position where the done variable is
 
-
-		// First we're gonna go through the image information
+	// First we're gonna go through the image information
 	for (int i = 0; i < ilen && done; i++)
 	{
 		unsigned char a = info[i];
@@ -172,21 +157,18 @@ void insertarMensaje(Imagen* img, unsigned char mensaje[], int n) {
 	}
 
 
-
 	img->informacion = info;
 	// ------------------------------------------------------------------------------
 	// End
 	// ------------------------------------------------------------------------------
-
-
 }
 
 /**
 * Extrae un mensaje de tamanio l, guardado de a n bits por componente de color, de la imagen apuntada por img
-* parámetro img: Apuntador a una imagen que tiene almacenado el mensaje en sus pixeles.
-* parámetro msg: Apuntador a una cadena de caracteres donde se depositará el mensaje.
-* parámetro l: Tamanio en bytes del mensaje almacenado en la imagen.
-* parámetro n: Cantidad de bits del mensaje que se almacenan en cada componente de color de cada pixel. 0 < n <= 8.
+* parÃ¡metro img: Apuntador a una imagen que tiene almacenado el mensaje en sus pixeles.
+* parÃ¡metro msg: Apuntador a una cadena de caracteres donde se depositarÃ¡ el mensaje.
+* parÃ¡metro l: Tamanio en bytes del mensaje almacenado en la imagen.
+* parÃ¡metro n: Cantidad de bits del mensaje que se almacenan en cada componente de color de cada pixel. 0 < n <= 8.
 */
 void leerMensaje(Imagen* img, unsigned char msg[], int l, int n) {
 	// TODO: Desarrollar OBLIGATORIAMENTE en su totalidad.
@@ -213,20 +195,20 @@ void leerMensaje(Imagen* img, unsigned char msg[], int l, int n) {
 }
 
 /**
-* Extrae n bits a partir del bit que se encuentra en la posición bitpos en la secuencia de bytes que
-* se pasan como parámetro
-* parámetro secuencia: Apuntador a una secuencia de bytes.
-* parámetro n: Cantidad de bits que se desea extraer. 0 < n <= 8.
-* parámetro bitpos: Posición del bit desde donde se extraerán los bits. 0 <= n < 8*longitud de la secuencia
-* parámetro doneP: Apuntador a el lugar donde se encuentra la variable que indica que se ha termiado el proceso
+* Extrae n bits a partir del bit que se encuentra en la posiciÃ³n bitpos en la secuencia de bytes que
+* se pasan como parÃ¡metro
+* parÃ¡metro secuencia: Apuntador a una secuencia de bytes.
+* parÃ¡metro n: Cantidad de bits que se desea extraer. 0 < n <= 8.
+* parÃ¡metro bitpos: PosiciÃ³n del bit desde donde se extraerÃ¡n los bits. 0 <= n < 8*longitud de la secuencia
+* parÃ¡metro doneP: Apuntador a el lugar donde se encuentra la variable que indica que se ha termiado el proceso
 * retorno: Los n bits solicitados almacenados en los bits menos significativos de un unsigned char
 */
-unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char doneP[]) 
+unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char doneP[])
 {
 	size_t len = strlen(secuencia);
 	unsigned char* info = secuencia;
 	// Know when to stop
-	if (bitpos >= len || (bitpos + n) >= len)
+	if (bitpos >= (len*8) || (bitpos + n) >= (len*8))
 	{
 		*doneP = 0;
 	}
@@ -243,14 +225,8 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 	unsigned char data = info[posByte];
 	unsigned char* dataP = &data;
 
-	// If n is 8
-	if (n == 8)
-	{
-
-	}
-
 	// If the n bits are in two bytes of the message
-	else if ((posBit + n) > 8)
+	if ( (n != 8) && ( (posBit + n) > 8))
 	{
 		int numberBitsByteOne = 8 - posBit;
 		int numberBitsByteTwo = n - numberBitsByteOne;
@@ -259,7 +235,7 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 		int aux = numberBitsByteOne;
 
 		// Put the info of the byte one in the correct position 
-		while (aux != numberBitsByteTwo)
+		while (aux != ( 8 - numberBitsByteTwo ))
 		{
 			data = data >> 1;
 			aux++;
@@ -275,7 +251,7 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 	}
 
 	// If the n bits are just in one byte
-	else
+	else if ( n != 8 )
 	{
 		int aux = posBit;
 		data = data << posBit;
@@ -293,7 +269,7 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 // Lee un archivo en formato BMP y lo almacena en la estructura img
 // NO MODIFICAR
 void cargarBMP24(Imagen* imagen, char* nomArchivoEntrada) {
-	// bmpDataOffset almacena la posición inicial de los datos de la imagen. Las otras almacenan el alto y el ancho
+	// bmpDataOffset almacena la posiciÃ³n inicial de los datos de la imagen. Las otras almacenan el alto y el ancho
 	// en pixeles respectivamente
 	int bmpDataOffset, bmpHeight, bmpWidth;
 	int y;
@@ -307,14 +283,14 @@ void cargarBMP24(Imagen* imagen, char* nomArchivoEntrada) {
 		exit(-1);
 	}
 
-	fseek(bitmapFile, 10, SEEK_SET); // 10 es la posición del campo "Bitmap Data Offset" del bmp	
+	fseek(bitmapFile, 10, SEEK_SET); // 10 es la posiciÃ³n del campo "Bitmap Data Offset" del bmp	
 	fread(&bmpDataOffset, sizeof(int), 1, bitmapFile);
 
-	fseek(bitmapFile, 18, SEEK_SET); // 18 es la posición del campo "height" del bmp
+	fseek(bitmapFile, 18, SEEK_SET); // 18 es la posiciÃ³n del campo "height" del bmp
 	fread(&bmpWidth, sizeof(int), 1, bitmapFile);
 	bmpWidth = bmpWidth * 3;
 
-	fseek(bitmapFile, 22, SEEK_SET); // 22 es la posición del campo "width" del bmp
+	fseek(bitmapFile, 22, SEEK_SET); // 22 es la posiciÃ³n del campo "width" del bmp
 	fread(&bmpHeight, sizeof(int), 1, bitmapFile);
 
 	residuo = (4 - (bmpWidth) % 4) & 3; // Se debe calcular los bits residuales del bmp, que surjen al almacenar en palabras de 32 bits
@@ -328,14 +304,16 @@ void cargarBMP24(Imagen* imagen, char* nomArchivoEntrada) {
 	for (y = 0; y < bmpHeight; y++) {
 		for (x = 0; x < bmpWidth; x++) {
 			int pos = y * bmpWidth + x;
-			fread(&imagen->informacion[pos], sizeof(unsigned char), 1, bitmapFile);
+			unsigned char value;
+			size_t p = fread(&value, sizeof(unsigned char), 1, bitmapFile);
+			imagen->informacion[pos] = value;
 		}
 		fseek(bitmapFile, residuo, SEEK_CUR); // Se omite el residuo en los datos
 	}
 	fclose(bitmapFile);
 }
 
-// Esta función se encarga de guardar una estructura de Imagen con formato de 24 bits (formato destino) en un archivo binario
+// Esta funciÃ³n se encarga de guardar una estructura de Imagen con formato de 24 bits (formato destino) en un archivo binario
 // con formato BMP de Windows.
 // NO MODIFICAR
 void guardarBMP24(Imagen * imagen, char* nomArchivoSalida) {
