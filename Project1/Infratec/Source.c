@@ -170,26 +170,55 @@ void insertarMensaje(Imagen* img, char mensaje[], int n) {
 * parámetro n: Cantidad de bits del mensaje que se almacenan en cada componente de color de cada pixel. 0 < n <= 8.
 */
 void leerMensaje(Imagen* img, unsigned char msg[], int l, int n) {
-	// TODO: Desarrollar OBLIGATORIAMENTE en su totalidad.
 
 	unsigned char* info = img->informacion;
 
-	int mlen = (l*8)/n; // Number of bytes in which the message is hidden
-	int posMsg = 0; // Position in which the message should be concatenated
+	int mlen = (l*8)/n; // Number of bytes in where the message is hidden
 
+	int posBit = 0; // Position inside the byte in which the message should be concatenated
+	int posByt = 0; // Byte in which information is being loaded
 
-		// First we're gonna go through the image information
 	for (int i = 0; i < mlen; i++)
 	{
-		// Make cero the 8-n more significant bits of the byte i of the image information
-		info[i] << 8 - n;
-		info[i] >> 8 - n;
+		unsigned char info1 = info[i];
+		// Make cero the 8-n less significant bits of the byte i of the image information
+		info1 = info1 << 8 - n;
+		//When all the bits of the bytes where the message is hidden are part of the meesage
+		if (n==8)
+		{
+			msg[i] = info1;
+		}
+		//When we insert in the first bit of a byte
+		else if (posBit==0)
+		{
+			msg[posByt] = info1;
+			posBit = posBit + n;
+		}
+		//When the n bits dont fit in the same byte
+		else if((posBit + n) > 8)
+		{
+			unsigned char info2 = info1;
 
-		// copy the char into the desired position of another char
-		memcpy(msg[posMsg], info[i], strlen(info[i]) + 1);
+			info1 = info1 >> posBit;
+			msg[posByt] = msg[posByt] | info1;
+			posByt = posByt + 1;
 
-		// Insert the n bits to the char with the image info
-		posMsg = posMsg + n;
+			info2 = info2 << 8 - posBit;
+			posBit = n - (8 - posBit);
+			msg[posByt] = msg[posByt] | info2;
+		}
+		//When the n bits fit in the same byte
+		else
+		{
+			info1 = info1 >> posBit;
+			msg[posByt] = msg[posByt] | info1;
+			posBit = posBit + n;
+			if (posBit == 8)
+			{
+				posBit = 0;
+				posByt = posByt + 1;
+			}
+		}
 	}
 }
 
