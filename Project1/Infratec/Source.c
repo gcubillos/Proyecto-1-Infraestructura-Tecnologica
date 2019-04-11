@@ -38,7 +38,7 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 // NO MODIFICAR
 int main(int argc, char* argv[]) {
 
-	Imagen* img = (Imagen*)malloc(sizeof(Imagen));
+	Imagen *img = (Imagen *)malloc(sizeof(Imagen));
 	char msg[10000];
 	int op, num, l, i, n;
 	char nomArch[256];
@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 	scanf("%d", &op);
 
 	printf("Ingrese el nombre/ruta de la imagen (incluya el formato .bmp): ");
-
+	
 	char temp;
 	scanf("%c", &temp);
 	gets(nomArch);
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
 
 		printf("\nLongitud mensaje: %d bytes\n", strlen(msg));
 		msg[strlen(msg)] = '\0';
-		
+
 		printf("Ingrese el numero de bits por Byte: ");
 		scanf("%d", &num);
 
@@ -117,9 +117,6 @@ int main(int argc, char* argv[]) {
 */
 void insertarMensaje(Imagen* img, char mensaje[], int n) {
 
-	// ------------------------------------------------------------------------------
-	// Insert the message to the image information
-	// ------------------------------------------------------------------------------
 	if (strlen(mensaje) == 0)
 		return 0; /* no input string */
 
@@ -134,9 +131,9 @@ void insertarMensaje(Imagen* img, char mensaje[], int n) {
 
 	unsigned char* info = img->informacion;
 
-	int ilen = bmpHeight * bmpWidth; // Numero de bits imagen
-	int posMsg = 0; // Posicion en el mensaje
-	char done = 1; // Se termina de escribir
+	int ilen = bmpHeight * bmpWidth; // # of bits og the image
+	int posMsg = 0; // Position inside the message
+	char done = 1; // Indicate that the message was completed write
 	char* doneP = &done; // Pointer to the position where the done variable is
 
 	// First we're gonna go through the image information
@@ -152,14 +149,11 @@ void insertarMensaje(Imagen* img, char mensaje[], int n) {
 
 		// Insert the n bits to the char with the image info
 		info[i] = a | bitsToInsert;
-		unsigned char finalByte = info[i];
 	}
 
-
+	// Update the bytes of the image with the bytes that contains the message
 	img->informacion = info;
-	// ------------------------------------------------------------------------------
-	// End
-	// ------------------------------------------------------------------------------
+	
 }
 
 /**
@@ -235,6 +229,7 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 {
 	size_t len = strlen(secuencia);
 	unsigned char* info = secuencia;
+	
 	// Know when to stop
 	if (bitpos >= (len*8) || (bitpos + n) >= (len*8))
 	{
@@ -262,7 +257,7 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 		data = data << posBit;		// Now, data has a fraction of the n bits in the more significant bits 
 		int aux = numberBitsByteOne;
 
-		// Put the info of the byte one in the correct position 
+		// Put the info of the byte one in the correct position
 		while (aux != ( 8 - numberBitsByteTwo ))
 		{
 			data = data >> 1;
@@ -274,7 +269,7 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 		char data2 = aa;
 		data2 = data2 >> (8 - numberBitsByteTwo);	// Now, data2 has a fraction of the n bits in the less significant bits 
 
-		// Concatenate data with data2
+		// Concatenate data with data2. The n bits are in the less significant bits of the byte data
 		data = data | data2;
 	}
 
@@ -284,6 +279,7 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 		int aux = posBit;
 		data = data << posBit;
 		aux = 8 - n;
+		// Move the n bits to the less significant n bits of the byte data.
 		while (aux != 0)
 		{
 			data = data >> 1;
@@ -296,7 +292,7 @@ unsigned char sacarNbits(unsigned char secuencia[], int bitpos, int n, char done
 
 // Lee un archivo en formato BMP y lo almacena en la estructura img
 // NO MODIFICAR
-void cargarBMP24(Imagen * imagen, char* nomArchivoEntrada) {
+void cargarBMP24(Imagen * imagen, char * nomArchivoEntrada) {
 	// bmpDataOffset almacena la posición inicial de los datos de la imagen. Las otras almacenan el alto y el ancho
 	// en pixeles respectivamente
 	int bmpDataOffset, bmpHeight, bmpWidth;
@@ -304,9 +300,8 @@ void cargarBMP24(Imagen * imagen, char* nomArchivoEntrada) {
 	int x;
 	int	residuo;
 
-	FILE* bitmapFile;
+	FILE *bitmapFile;
 	bitmapFile = fopen(nomArchivoEntrada, "rb");
-
 	if (bitmapFile == NULL) {
 		printf("No ha sido posible cargar el archivo: %s\n", nomArchivoEntrada);
 		exit(-1);
@@ -326,36 +321,33 @@ void cargarBMP24(Imagen * imagen, char* nomArchivoEntrada) {
 
 	imagen->ancho = bmpWidth;
 	imagen->alto = bmpHeight;
-	imagen->informacion = (unsigned char*)calloc(bmpWidth * bmpHeight, sizeof(unsigned char));
+	imagen->informacion = (unsigned char *)calloc(bmpWidth * bmpHeight, sizeof(unsigned char));
 
 	fseek(bitmapFile, bmpDataOffset, SEEK_SET); // Se ubica el puntero del archivo al comienzo de los datos
+
 	for (y = 0; y < bmpHeight; y++) {
 		for (x = 0; x < bmpWidth; x++) {
 			int pos = y * bmpWidth + x;
-			unsigned char value;
-			size_t p = fread(&value, sizeof(unsigned char), 1, bitmapFile);
-			imagen->informacion[pos] = value;
+			fread(&imagen->informacion[pos], sizeof(unsigned char), 1, bitmapFile);
 		}
 		fseek(bitmapFile, residuo, SEEK_CUR); // Se omite el residuo en los datos
 	}
-
 	fclose(bitmapFile);
 }
-
-
 
 // Esta función se encarga de guardar una estructura de Imagen con formato de 24 bits (formato destino) en un archivo binario
 // con formato BMP de Windows.
 // NO MODIFICAR
-void guardarBMP24(Imagen * imagen, char* nomArchivoSalida) {
+void guardarBMP24(Imagen * imagen, char * nomArchivoSalida) {
 	unsigned char bfType[2];
 	unsigned int bfSize, bfReserved, bfOffBits, biSize, biWidth, biHeight, biCompression, biSizeImage, biXPelsPerMeter, biYPelsPerMeter, biClrUsed, biClrImportant;
 	unsigned short biPlanes, biBitCount;
-	FILE* archivoSalida;
+	FILE * archivoSalida;
 	int y, x;
 	int relleno = 0;
 
 	int residuo = (4 - (imagen->ancho) % 4) & 3; // Se debe calcular los bits residuales del bmp, que quedan al forzar en palabras de 32 bits
+
 
 	bfType[2];       // Tipo de Bitmap
 	bfType[0] = 'B';
