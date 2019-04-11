@@ -2,8 +2,7 @@
 // EL GRUPO DEBE SER DESARROLLADO EN GRUPOS DE A 3 PERSONAS MAXIMO
 //
 // DESARROLLADO POR:
-// Nombre - Código
-// Nombre - Código
+// Leonardo Vasquez - 201730600
 // Vhanessa Cardona - 201728751
 
 #define _CRT_SECURE_NO_DEPRECATE 
